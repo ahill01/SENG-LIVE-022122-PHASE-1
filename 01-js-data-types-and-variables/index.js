@@ -91,7 +91,7 @@
 
 // const x;
 
-// const x = 5;
+//* const x = 5;
 
 // const x;
 
@@ -103,7 +103,7 @@
 
 // let y;
 
-// let y = 5;
+//* let y = 5;
 
 // let y;
 

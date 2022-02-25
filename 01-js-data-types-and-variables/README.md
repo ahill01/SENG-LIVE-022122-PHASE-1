@@ -10,6 +10,7 @@
 ### Warm Up Question
 
 - Create a variable called 'faveNum' and set it equal to your favorite number
+let faveNum = 8
 
 ### Resources
 
