@@ -32,12 +32,36 @@ const pokemon = [
 ];
 
 const pokeContainer = document.querySelector("#poke-container");
+const pokeForm = document.querySelector("#poke-form");
+
+pokeForm.addEventListener("submit",function(e){
+  e.preventDefault();
+  console.log("ears on!!");
+  /**creates new pokemon card**/
+  //grab form field values
+  const name = document.querySelector("#name-input").value;
+  const img = document.querySelector("#img-input").value;
+
+  //create new character object w/ values
+const newCharacter = {
+    id: 6,
+    name: name,
+    img: img,
+    likes: 0,
+}
+
+  //render character on DOM
+  renderPokemon(newCharacter);
+  //pokemon.push(newCharacter);
+});
 
 pokemon.forEach(function (character) {
   renderPokemon(character);
 });
 
 function renderPokemon(char) {
+  //before likes: console.log(char);
+
   const pokeCard = document.createElement("div");
   pokeCard.id = `poke-${char.id}`;
   pokeCard.className = "poke-card";
@@ -49,6 +73,28 @@ function renderPokemon(char) {
   const pokeName = document.createElement("h3");
   pokeName.textContent = char.name;
 
-  pokeCard.append(pokeImg, pokeName);
+  const pokeLikes = document.createElement("h3");
+  pokeLikes.textContent = "Likes: "; 
+
+  const likesNum = document.createElement("h5");
+  likesNum.className = "likes-num"; 
+  likesNum.textContent = char.likes;
+
+  const likeBttn = document.createElement("button");
+  likeBttn.className = "likes-bttn";
+  likeBttn.textContent = "♥";
+  likeBttn.addEventListener("click",function(){
+    //increment number of likes
+    ++char.likes
+    // update DOM
+    likesNum.textContent = char.likes;
+  });
+
+  const deleteBttn = document.createElement("button");
+  deleteBttn.className = "delete-bttn";
+  deleteBttn.textContent = "DELETE";
+  deleteBttn.addEventListener("click",e => pokeCard.remove());
+
   pokeContainer.appendChild(pokeCard);
+  pokeCard.append(pokeImg, pokeName,pokeLikes,likesNum,likeBttn,deleteBttn);
 }
