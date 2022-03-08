@@ -100,10 +100,10 @@ function renderPokemon(pokemon) {
   deleteBttn.textContent = "delete";
   deleteBttn.addEventListener("click", function (e) {
     e.stopPropagation();
+    pokeCard.remove();
     fetch(`http://localhost.3000/${pokemon.id}`,{
       method:`DELETE`,
       }); 
-    pokeCard.remove();
   });
 
   pokeCard.append(pokeImg, pokeName, pokeLikes, likeNum, likesBttn, deleteBttn);
