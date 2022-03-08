@@ -82,13 +82,27 @@ function renderPokemon(pokemon) {
     e.stopPropagation();
     ++pokemon.likes;
     likeNum.textContent = pokemon.likes;
-  });
+
+    fetch(`http://localhost.3000/${pokemon.id}`,{
+      method:`PATCH`,
+      headers:{
+        "Content-Type":"application/json",
+        "Accept":"application/json",
+      },
+      body: JSON.stringify({likes:pokemon.likes})
+      })
+    }
+    )
+  
 
   const deleteBttn = document.createElement("button");
   deleteBttn.className = "delete-bttn";
   deleteBttn.textContent = "delete";
   deleteBttn.addEventListener("click", function (e) {
     e.stopPropagation();
+    fetch(`http://localhost.3000/${pokemon.id}`,{
+      method:`DELETE`,
+      }); 
     pokeCard.remove();
   });
 
@@ -96,7 +110,7 @@ function renderPokemon(pokemon) {
   pokeContainer.appendChild(pokeCard);
 
   return pokeCard;
-}
+};
 
 // The following methods will fire off when a character card gets clicked:
 
@@ -109,7 +123,7 @@ function showCharacter(character) {
     .then(function (char) {
       let pokeCard = renderPokemon(char);
       pokeCard.id = "poke-show-card";
-      // pokeCard.dataset.id = character.id;
+      pokeCard.dataset.id = character.id;
       loadComments(pokeCard, char);
       pokeContainer.replaceChildren(pokeCard);
       pokeFormContainer.replaceChildren(commentsForm());
@@ -121,7 +135,7 @@ function renderComment(commentsDiv, comment) {
   li.textContent = comment.content;
   commentsDiv.append(li);
   return li;
-}
+};
 
 function commentsForm() {
   let form = document.createElement("form");
@@ -129,7 +143,30 @@ function commentsForm() {
 
   form.addEventListener("submit", function (e) {
     e.preventDefault();
-    console.log("comment form submitted!!!");
+    const comment = document.querySelector(`#comment-input`).value;
+    const characterId = parseInt(document.querySelector(`#poke-show-card`).dataset.id);
+
+    const newComment = {
+      content:comment,
+      characterID:characterId,
+    }
+
+    fetch(`http://localhost:3000/comments`, {
+      method: `POST`,
+      headers:{
+          "Content-Type":"application/json",
+          "Accept":"application/json" 
+      },
+      body: JSON.stringify(newComment)
+    })
+    //pessimistic rendering
+    .then(function(resp){
+      return resp.json();
+    })
+    .then(function(comment){
+      const commentsDiv = document.querySelector(`#comment-card${characterId}`);
+      renderComment(commentsDiv, comment);
+    //onsole.log("comment form submitted!!!");
   });
 
   let commentInput = document.createElement("input");
@@ -148,7 +185,9 @@ function commentsForm() {
   form.append(commentInput, submit);
 
   return form;
-}
+  });
+
+};
 
 function loadComments(pokeCard, char) {
   const commentsDiv = document.createElement("div");
